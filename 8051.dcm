@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP P80C550EBAA
+D 8051, CMOS, ROMless, 8 channel 8 bit A/D, watchdog timer
+K 8051
+F https://www.digchip.com/datasheets/download_datasheet.php?id=741162&part-number=P80C550EBAA
+$ENDCMP
+#
+#End Doc Library

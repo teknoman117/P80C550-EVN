@@ -1,0 +1,27 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AP62150WU
+D 1.5A, 1.3MHz Buck DC/DC Converter, adjustable output voltage, TSOT-23-6
+K 1.5A Buck DC/DC
+F https://www.diodes.com/assets/Datasheets/AP62150.pdf
+$ENDCMP
+#
+$CMP AP63201WU
+D 2A, 500kHz Buck DC/DC Converter, adjustable output voltage, TSOT-23-6
+K 2A Buck DC/DC
+F https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf
+$ENDCMP
+#
+$CMP AP63203WU
+D 2A, 1.1MHz Buck DC/DC Converter, fixed 3.3V output voltage, TSOT-23-6
+K 2A Buck DC/DC
+F https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf
+$ENDCMP
+#
+$CMP AP63205WU
+D 2A, 1.1MHz Buck DC/DC Converter, fixed 5.0V output voltage, TSOT-23-6
+K 2A Buck DC/DC
+F https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf
+$ENDCMP
+#
+#End Doc Library
