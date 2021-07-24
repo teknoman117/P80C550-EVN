@@ -79,6 +79,14 @@ Status Register Notes
   - 0 = Enable PFO interrupt
   - 1 = Disable PFO interrupt
 
+Revision History
+----------------
+- Revision 1.0
+  - First Board Produced
+  - Errors
+    - MAX693 RST signal (active-high) is open collector. This was not mentioned in the chip's datasheet, therefore no pull-up was designed into the board. ![#1](https://github.com/teknoman117/P80C550-EVN/issues/1)
+    - MAX693 ~RST signal (active-low, wired-OR) does not propagate to RST (active-high). Pushing the reset button will reset only the peripherals and not the CPU. ![#2](https://github.com/teknoman117/P80C550-EVN/issues/2)
+
 Background
 ----------
 ![Breadboard Computer](/Assets/P80C550-EVN-breadboard.webp)
