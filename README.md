@@ -22,8 +22,8 @@ Revision History
 Revision 1.0
   - First Board Produced
   - Design and/or Production Errors
-    - MAX693 RST signal (active-high) is open collector. This was not mentioned in the chip's datasheet, therefore no pull-up was designed into the board. ![#1](https://github.com/teknoman117/P80C550-EVN/issues/1)
-    - MAX693 ~RST signal (active-low, wired-OR) does not propagate to RST (active-high). Pushing the reset button will reset only the peripherals and not the CPU. ![#2](https://github.com/teknoman117/P80C550-EVN/issues/2)
+    - MAX693 RST signal (active-high) is open collector. This was not mentioned in the chip's datasheet, therefore no pull-up was designed into the board. [#1](https://github.com/teknoman117/P80C550-EVN/issues/1)
+    - MAX693 ~RST signal (active-low, wired-OR) does not propagate to RST (active-high). Pushing the reset button will reset only the peripherals and not the CPU. [#2](https://github.com/teknoman117/P80C550-EVN/issues/2)
 
 The Hardware
 ============
@@ -306,16 +306,14 @@ The ROM read signal (~CODE_RD) and chip select (~CODE_CS) are broken out to the 
 | 2   | CTS         |
 | 3   | RTS         |
 | 4   | DTR         |
-| 5   | TxD         |
+| 5   | TX          |
 | 6   | TX Clock    |
-| 7   | RxD         |
+| 7   | RX          |
 | 8   | RX Clock    |
 | 9   | SYNC        |
 | 10  | REQ         |
 | 11  | GND         |
 | 12  | +5V         |
-
-TODO: talk about ROM expansion (external devices pulling ~CODE_CS high)
 
 ## Datasheets
 
