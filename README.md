@@ -42,7 +42,7 @@ The onboard peripherals are mapped in the 8 KiB of address space following the X
 
 | Code Address   | Description |
 | -------------- | ----------- |
-| 0000h -> 7FFFh | 32 KiB ROM socket (by default - see section on [Expansion](#expansion)) |
+| 0000h -> 7FFFh | 32 KiB ROM socket (by default - see [Expansion](#expansion)) |
 | 8000h -> FFFFh | **unused**  |
 
 | Data Address   | Description                                     |
@@ -51,9 +51,8 @@ The onboard peripherals are mapped in the 8 KiB of address space following the X
 | 8000h          | [Power Status Register](#power-status-register) |
 | 8400h -> 8FFFh | **unused**                                      |
 | 9000h -> 903Fh | [RTC](#rtc)                                     |
-| 9400h -> 9401h | [UART / SDLC - Channel B](#uart-sdlc)           |
-| 9402h -> 9403h | [UART / SDLC - Channel A](#uart-sdlc)           |
-| 9800h -> 9801h | [I2C controller](#i2c-controller)               |
+| 9400h -> 9403h | [UART / SDLC](#uart--sdlc)                      |
+| 9800h -> 9801h | [I2C controller](#i2c)                          |
 | 9C00h -> 9C01h | [LCD](#lcd)                                     |
 | A000h -> FFFFh | **unused**                                      |
 
@@ -64,7 +63,7 @@ The P80C550 has two external interrupt lines which can either be falling edge tr
 | Interrupt | Devices                |
 | --------- | ---------------------- |
 | EX0       | Power Fault, RTC, I2C  |
-| EX1       | UART / SDLC controller |
+| EX1       | UART / SDLC            |
 
 ## Power and Battery Saver
 
@@ -134,29 +133,30 @@ Vin is the current input voltage and Vcutoff is the desired voltage for the regu
 - Read: Bit 7 is the ~PFO (Power Fault) line from the MAX 693 Supervisor
   - 0 = Low Voltage
   - 1 = Nominal Voltage
-- Write: Bit 7 is the ~PFO (Power Fault) interrupt mask 
+- Write: Bit 7 is the ~PFO (Power Fault) interrupt mask
   - 0 = Enable PFO interrupt
   - 1 = Disable PFO interrupt
+- Bits 0 -> 6 undefined
 
 ## UART / SDLC
 
-The AM85C30 "Enhanced Serial Communications Controller" can function as a UART or as an SDLC/HDLC controller. In UART mode, there is a 3-byte RX FIFO, but no TX FIFO. The SDLC/HDLC mode is also subject to this, but also possesses a 10 entry frame status FIFO. The chip is intended to be used with a DMA engine, but this does not exist for the P80C550. If a deeper FIFO is required, there is a more modern drop-in compatible version available called the Z85230, which appears to still in production. It adds a 4 byte TX FIFO and increases the RX FIFO to 8 bytes.
+The AM85C30 "Enhanced Serial Communications Controller" can function as a UART or as an SDLC/HDLC controller. In UART mode, there is a 3 byte RX FIFO, but no TX FIFO. The SDLC/HDLC mode adds a 10 entry frame status FIFO, but the data FIFOs remain the same. The chip is intended to be used with a DMA engine, but this does not exist on the 8051 platform. If a deeper FIFO is required, there is a more modern (less old?) drop-in compatible version available called the Z85230, which appears to still in production. It adds a 4 byte TX FIFO and increases the RX FIFO to 8 bytes from 3 bytes.
 
-| Data Address | Description                       |
-| ------------ | --------------------------------- |
-| 9400h        | UART / SDLC - Channel B (control) |
-| 9401h        | UART / SDLC - Channel B (data)    |
-| 9402h        | UART / SDLC - Channel A (control) |
-| 9403h        | UART / SDLC - Channel A (data)    |
+| Data Address | Description         |
+| ------------ | ------------------- |
+| 9400h        | Channel B - Control |
+| 9401h        | Channel B - Data    |
+| 9402h        | Channel A - Control |
+| 9403h        | Channel A - Data    |
 
 ## I2C
 
 The PCF8584 is an I2C controller supporting a 100 KHz SCL frequency in either master or slave mode.
 
-| Data Address | Description                       |
-| ------------ | --------------------------------- |
-| 9800h        | I2C controller - Register Access  |
-| 9801h        | I2C controller - Control          |
+| Data Address | Description      |
+| ------------ | ---------------- |
+| 9800h        | Register Access  |
+| 9801h        | Control          |
 
 ## RTC
 
@@ -191,7 +191,65 @@ Any LCD module compatible with the 16 pin HD44780 header may be used. The mounti
 | 9C00h        | LCD - Control |
 | 9C01h        | LCD - Data    |
 
-### LCD Header
+## PCB
+| Front Side | Back Side |
+| ---------- | --------- |
+| ![Front](/Assets/pcb-front.webp) | ![Back](/Assets/pcb-back.webp) |
+
+| Layout (Power Planes Not Shown) |
+| ---------------------------------- |
+| ![Layout](/Assets/pcb-layout.webp) |
+
+The PCB is a 98 mm by 69 mm, 4-layer board (2 signal layers, one +5V plane, and one ground plane) following the design rules for the low cost JLCPCB 4-layer process. Using 4 layers made the routing far easier, as I didn't have to worry about getting power in and around all of the signal traces. At time time of writing, 5 boards using Leaded HASL and a green PCB material is $8 (USD). Switching to ENIG-RoHS increases the price to $23.40 (USD) for 5 boards. 10 boards is $29 (USD), as they seemingly charge a flat rate for switching to ENIG on small orders. I also opted for FR4 TG155 because it's more tolerant to hot air soldering.
+
+To order, you can contact me at [hardware@nrlewis.dev](mailto:hardware@nrlewis.dev) and see if I have any laying around, or you can send the gerber files (attached to release tags) to your board house of choice. JLCPCB is my recommendation, as it seems that they have a lower 4-layer board tier available. PCBWay seems good as well, but their 4-layer process is a bit overkill for this board.
+
+The smallest components on the PCB are 0603 passives. These are the smallest size I'm comfortable hand soldering. Call me crazy, but I assembled this whole board using a Weller WE1010NA soldering station with a (small point) chisel tip, flux core solder, a flux pen, some solder wick, and a pair of tweezers from an iFixit kit. Apply flux generously, hold the components onto the pads with tweezers, hold your breath, and apply solder.
+
+## Expansion
+
+All of the major bus signals are broken out to stackable headers to allow for stacked expansion boards.
+
+### ROM Expansion
+
+The ROM read signal (~CODE_RD) and chip select (~CODE_CS) are broken out to the address low-byte header. The ~CODE_CS pin has a pulldown to keep the ROM enabled when no expansion boards are installed. The main idea behind these signals is to enable the creation of a self-programming expansion. By default, the ROM socket occupies both the lower and upper 32 KiB of the code address space, as the chip select is always enabled and A15 is ignored. A self programming module would allow the onboard ROM be either relocated or disabled when switching to an external memory.
+
+#### Address Low-Byte Header
+
+| Pin | Description |
+| --- | ----------- |
+| 1   | GND         |
+| 2   | +5V         |
+| 3   | A0          |
+| 4   | A1          |
+| 5   | A2          |
+| 6   | A3          |
+| 7   | A4          |
+| 8   | A5          |
+| 9   | A6          |
+| 10  | A7          |
+| 11  | ~CODE_RD    |
+| 12  | ~CODE_CS    |
+| 13  | ~RST        |
+
+#### Address High-Byte Header
+
+| Pin | Description |
+| --- | ----------- |
+| 1   | A15         |
+| 2   | A14         |
+| 3   | A13         |
+| 4   | A12         |
+| 5   | A11         |
+| 6   | A10         |
+| 7   | A9          |
+| 8   | A8          |
+| 9   | ~WR         |
+| 10  | ~RD         |
+| 11  | +5V         |
+| 12  | GND         |
+
+#### LCD Header
 
 | Pin | Description  |
 | --- | ------------ |
@@ -212,46 +270,7 @@ Any LCD module compatible with the 16 pin HD44780 header may be used. The mounti
 | 15  | LCD_A (+5V)  |
 | 16  | LCD_K        |
 
-## Expansion
-
-All of the major bus signals are broken out to stackable headers to allow for stacked expansion boards.
-
-### Address Low-Byte Header (Lower Left Header)
-
-| Pin | Description |
-| --- | ----------- |
-| 1   | GND         |
-| 2   | +5V         |
-| 3   | A0          |
-| 4   | A1          |
-| 5   | A2          |
-| 6   | A3          |
-| 7   | A4          |
-| 8   | A5          |
-| 9   | A6          |
-| 10  | A7          |
-| 11  | ~CODE_RD    |
-| 12  | ~CODE_CS    |
-| 13  | ~RST        |
-
-### Address High-Byte Header (Upper Right Header)
-
-| Pin | Description |
-| --- | ----------- |
-| 1   | A15         |
-| 2   | A14         |
-| 3   | A13         |
-| 4   | A12         |
-| 5   | A11         |
-| 6   | A10         |
-| 7   | A9          |
-| 8   | A8          |
-| 9   | ~WR         |
-| 10  | ~RD         |
-| 11  | +5V         |
-| 12  | GND         |
-
-### CPU Peripheral Header (Lower Right Header)
+#### CPU Peripheral Header
 
 | Pin | Description       |
 | --- | ----------------- |
@@ -266,7 +285,7 @@ All of the major bus signals are broken out to stackable headers to allow for st
 | 9   | +5V               |
 | 10  | GND               |
 
-### ADC Header
+#### ADC Header
 
 | Pin | Description  |
 | --- | ------------ |
@@ -279,7 +298,7 @@ All of the major bus signals are broken out to stackable headers to allow for st
 | 7   | P1.6 (ADC 6) |
 | 8   | P1.7 (ADC 7) |
 
-### UART Headers
+#### UART Headers
 
 | Pin | Description |
 | --- | ----------- |
@@ -297,21 +316,6 @@ All of the major bus signals are broken out to stackable headers to allow for st
 | 12  | +5V         |
 
 TODO: talk about ROM expansion (external devices pulling ~CODE_CS high)
-
-## PCB
-| Front Side | Back Side |
-| ---------- | --------- |
-| ![Front](/Assets/pcb-front.webp) | ![Back](/Assets/pcb-back.webp) |
-
-| Layout (Power Planes Not Shown) |
-| ---------------------------------- |
-| ![Layout](/Assets/pcb-layout.webp) |
-
-The PCB is a 98 mm by 69 mm, 4-layer board (2 signal layers, one +5V plane, and one ground plane) following the design rules for the low cost JLCPCB 4-layer process. Using 4 layers made the routing far easier, as I didn't have to worry about getting power in and around all of the signal traces. At time time of writing, 5 boards using Leaded HASL and a green PCB material is $8 (USD). Switching to ENIG-RoHS increases the price to $23.40 (USD) for 5 boards. 10 boards is $29 (USD), as they seemingly charge a flat rate for switching to ENIG on small orders. I also opted for FR4 TG155 because it's more tolerant to hot air soldering.
-
-To order, you can contact me at [hardware@nrlewis.dev](mailto:hardware@nrlewis.dev) and see if I have any laying around, or you can send the gerber files (attached to release tags) to your board house of choice. JLCPCB is my recommendation, as it seems that they have a lower 4-layer board tier available. PCBWay seems good as well, but their 4-layer process is a bit overkill for this board.
-
-The smallest components on the PCB are 0603 passives. These are the smallest size I'm comfortable hand soldering. Call me crazy, but I assembled this whole board using a Weller WE1010NA soldering station with a (small point) chisel tip, flux core solder, a flux pen, some solder wick, and a pair of tweezers from an iFixit kit. Apply flux generously, hold the components onto the pads with tweezers, hold your breath, and apply solder.
 
 ## Datasheets
 
