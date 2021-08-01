@@ -75,11 +75,13 @@ The board can either be powered directly via the 5V rail, or by a 7V to 18V term
 
 There is also a holder for an *optional* CR1216, CR1220, or CR1225 3V coin cell to power the RTC. If omitted, RTC and CMOS state will be lost on power-off. A CR1216 is good for at least 2 months (and counting).
 
-A MAX693 microprocessor supervisor is used to manage the power-on reset delay, the RTC backup power, and a lower power fault signal to the CPU.
+A MAX693 microprocessor supervisor is used to manage the power-on reset delay, the RTC backup power, a low power fault signal, and provide 5V rail undervoltage protection.
 
-A voltage divider is provided via a potentiometer to set the low power threshold. A jumper ("PFI Input Select") is provided to select whether the source voltage for the divider is provided from the Vin terminal block or the 5V rail. The former is used in battery powered or other situations using Vin and the latter is used when the 5V rail is directly driven. A 5.1V zener diode protects from accidental overvoltage on the voltage reference inputs.
+A potentiometer is provided to configure the low power threshold. A jumper ("PFI Input Select") is provided to select whether the source voltage is provided from the Vin terminal block or the 5V rail. The former is used in battery powered or other scenarios using the input regulator and the latter is used when the 5V rail is directly driven. A 5.1V zener diode protects from accidental overvoltage on the voltage reference inputs.
 
-The MAX693 will report a low power fault when the reference input drops below **1.3V**. By default, this will trigger the EX0 interrupt on the P80C550. A single bit register ([Power Status Register](#power-status-register)) is provided to check the status of the power fault output of the MAX693 and to mask the interrupt it generates. It will also hold the CPU in a reset state if the 5V rail drops below 4.4V.
+The MAX693 will report a low power fault when the reference input drops below **1.3V**. By default, this will trigger the EX0 interrupt on the P80C550. A single bit register ([Power Status Register](#power-status-register)) is provided to check the status of the power fault output of the MAX693 and to mask the interrupt it generates.
+
+For scenarios directly powering the 5V rail, the voltage divider should be configured to output 1.444V at 5V. This will trigger the lower power fault if the rail drops to 4.5V, which is the minimum safe CPU operating voltage. The MAX693 will hold the CPU in a reset state if the 5V rail drops further to 4.4V.
 
 In Vin powered scenarios, the AP62150WU-7 buck regulator will shut down when the reference input drops below **1.2V** and completely cut power to the board. The voltage divider should be configured such that power is cut when the voltage drops to the minimum voltage of your battery, or the minimum voltage of the regulator (about 6.5V).
 
@@ -87,9 +89,7 @@ To determine the output voltage of the voltage divider at a specific input volta
 
  > Vout = Vin * (1.2V / Vcutoff);
 
-Vin is the current input voltage and Vcutoff is the desired voltage for the regulator to shut off. Vout is the voltage you should tune the voltage divider to output at that input voltage. See the example configurations below. The emphasis on maximum voltages is to ensure you are aware that "fresh off the charger" batteries have a notably higher voltage than their nominal voltage (which they will drop to quickly), so be aware of this when tuning the cutoff reference.
-
-For scenarios directly powering the 5V rail, the voltage divider should be configured to output 1.444V at 5V. This will trigger the lower power fault if the rail drops to 4.5V, which is the minimum safe CPU operating voltage.
+Vin is the current input voltage and Vcutoff is the desired voltage for the regulator to shut off. Vout is the voltage that the voltage divider should be configured to output at that input voltage. See the example configurations below. The emphasis on maximum voltages is to ensure you are aware that "fresh off the charger" batteries have a notably higher voltage than their nominal voltage (which they will drop to quickly), so be aware of this when tuning the cutoff reference.
 
 ### Example Voltage Divider Configurations
 - Directly powering the 5V rail
@@ -140,7 +140,14 @@ For scenarios directly powering the 5V rail, the voltage divider should be confi
 
 ## UART / SDLC
 
-The AM85C30 "ESCC" can function as a Dual Asynchronous UART with all of the modem control signals, but without FIFOs. It can also operate as an SLDC or HLDC communications controller with FIFOs. Apparently these formed the basis of various networking architectures in the past that I know nothing about. The lack of FIFOs in asynchronous serial mode is a bummer, especially because these chips are good for up to 2 Mbit data rates. If a FIFO is a must, either rework the board for a 16C550 uart or use the Z85230 (still manufactured). It retains all of the SDLC/HDLC bits but adds a 4 byte TX FIFO and an 8 byte RX FIFO in asynchronous mode. The 10 MHz version is $15 on DigiKey.
+The AM85C30 "Enhanced Serial Communications Controller" can function as a UART or as an SDLC/HDLC controller. In UART mode, there is a 3-byte RX FIFO, but no TX FIFO. The SDLC/HDLC mode is also subject to this, but also possesses a 10 entry frame status FIFO. The chip is intended to be used with a DMA engine, but this does not exist for the P80C550. If a deeper FIFO is required, there is a more modern drop-in compatible version available called the Z85230, which appears to still in production. It adds a 4 byte TX FIFO and grows the RX FIFO to 8 bytes.
+
+| Data Address | Description |
+| ----- | --------------------------------- |
+| 9400h | UART / SDLC - Channel B (control) |
+| 9401h | UART / SDLC - Channel B (data)    |
+| 9402h | UART / SDLC - Channel A (control) |
+| 9403h | UART / SDLC - Channel A (data)    |
 
 ## I2C
 
@@ -156,7 +163,7 @@ TODO
 
 ![Assembled With LCD](/Assets/P80C550-EVN-assembled.webp)
 
-Any LCD module compatible with the 16 pin HD44780 header may be used. The mounting holes are spaced for the seemingly popular LCD2004A module that can be found pretty much everywhere. I used this module specifically (not an endorsement of this seller or any form of affiliate link) - [eBay](https://www.ebay.com/itm/171907112716).
+Any LCD module compatible with the 16 pin HD44780 header may be used. The mounting holes are spaced for the popular LCD2004A module (20x4 characters) that can be found pretty much everywhere.
 
 ## PCB
 | Front Side | Back Side |
