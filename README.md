@@ -34,7 +34,7 @@ The Hardware
 
 The CPU is a ROM-less CMOS 8051 microcontroller made by Signetics in the late 1980's. The only major differences from the original are that the Signetics part integrates an 8 bit analog to digital converter (with an 8 channel mux on Port 1), a programmable watchdog timer, and is built on a CMOS process. By nature of being ROM-less, the majority of the I/O ports must be used for the external bus interface (Port 2 = A8..15, Port 0 = AD0..7, Port 3.6 and 3.7 are the ~RD and ~WR signals). This is both good and bad, as we must use extra chips to get GPIO functions, but allows us to use far more than the 2K/4K/8K of ROM the 8051 could be ordered with and the 128 bytes of internal RAM. You can also use EEPROM or Flash for code storage, which is much nicer than needing to pick up an EPROM eraser.
 
-![Datasheet 1 - DigChip](https://www.digchip.com/datasheets/download_datasheet.php?id=741162&part-number=P80C550EBAA)
+[Datasheet 1 - DigChip](https://www.digchip.com/datasheets/download_datasheet.php?id=741162&part-number=P80C550EBAA)
 
 ## Memory Map
 
@@ -79,7 +79,7 @@ There is also a holder for an *optional* CR1216, CR1220, or CR1225 3V coin cell 
 
 A MAX693 microprocessor supervisor is used to manage the power-on reset delay, the RTC backup power, a low power fault signal, and provide 5V rail undervoltage protection.
 
-![Datasheet 1 - Maxim](https://datasheets.maximintegrated.com/en/ds/MAX690-MAX695.pdf)
+[Datasheet 1 - Maxim](https://datasheets.maximintegrated.com/en/ds/MAX690-MAX695.pdf)
 
 A potentiometer is provided to configure the low power threshold. A jumper ("PFI Input Select") is provided to select whether the source voltage is provided from the Vin terminal block or the 5V rail. The former is used in battery powered or other scenarios using the input regulator and the latter is used when the 5V rail is directly driven. A 5.1V zener diode protects from accidental overvoltage on the voltage reference inputs.
 
@@ -153,20 +153,23 @@ The AM85C30 "Enhanced Serial Communications Controller" can function as a UART o
 | 9402h | UART / SDLC - Channel A (control) |
 | 9403h | UART / SDLC - Channel A (data)    |
 
-![Datasheet 1 - ChipDB](http://datasheets.chipdb.org/AMD/07513.pdf)
-![Datasheet 2 - Rockby](https://www.rockby.com.au/DSheets/26719.pdf)
+[Datasheet 1 - ChipDB](http://datasheets.chipdb.org/AMD/07513.pdf)
+[Datasheet 2 - Rockby](https://www.rockby.com.au/DSheets/26719.pdf)
 
 ## I2C
 
 The PCF8584 is a simple I2C controller supporting 100 KHz SCL frequency in either master or slave mode. Not really anything of note here. I had to source this from eBay because the 5V version of the part went out of production years ago.
 
-![Datasheet1 - NXP](https://www.nxp.com/docs/en/data-sheet/PCF8584.pdf)
+[Datasheet1 - NXP](https://www.nxp.com/docs/en/data-sheet/PCF8584.pdf)
 
 ## Expansion
 
-TODO
+Header 1 - A7:0, ~CODE_RD, ~CODE_CS, ~RST, 5V, GND
+Header 2 - A15:8, ~WR, ~RD, 5V, GND
+Header 3 - 8051 UART RX/TX, ~INT0, ~INT1, T0, T1, UART_IEO, CLK, 5V, GND
+Header 4 - LCD Connector (D7:0, LCD_CONTRAST, LCD_E, ~WR, A0, 5V, GND)
 
-3 headers
+TODO: talk about ROM expansion
 
 ## LCD
 
@@ -174,7 +177,7 @@ TODO
 
 Any LCD module compatible with the 16 pin HD44780 header may be used. The mounting holes are spaced for the popular LCD2004A module (20x4 characters) that can be found pretty much everywhere.
 
-![Datasheet 1 - Beta-eStore](https://www.beta-estore.com/download/rk/RK-10290_410.pdf)
+[Datasheet 1 - Beta-eStore](https://www.beta-estore.com/download/rk/RK-10290_410.pdf)
 
 ## PCB
 | Front Side | Back Side |
