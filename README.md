@@ -144,7 +144,7 @@ Vin is the current input voltage and Vcutoff is the desired voltage for the regu
 
 ## UART / SDLC
 
-The AM85C30 "Enhanced Serial Communications Controller" can function as a UART or as an SDLC/HDLC controller. In UART mode, there is a 3-byte RX FIFO, but no TX FIFO. The SDLC/HDLC mode is also subject to this, but also possesses a 10 entry frame status FIFO. The chip is intended to be used with a DMA engine, but this does not exist for the P80C550. If a deeper FIFO is required, there is a more modern drop-in compatible version available called the Z85230, which appears to still in production. It adds a 4 byte TX FIFO and grows the RX FIFO to 8 bytes.
+The AM85C30 "Enhanced Serial Communications Controller" can function as a UART or as an SDLC/HDLC controller. In UART mode, there is a 3-byte RX FIFO, but no TX FIFO. The SDLC/HDLC mode is also subject to this, but also possesses a 10 entry frame status FIFO. The chip is intended to be used with a DMA engine, but this does not exist for the P80C550. If a deeper FIFO is required, there is a more modern drop-in compatible version available called the Z85230, which appears to still in production. It adds a 4 byte TX FIFO and increases the RX FIFO to 8 bytes.
 
 | Data Address | Description |
 | ----- | --------------------------------- |
@@ -154,6 +154,7 @@ The AM85C30 "Enhanced Serial Communications Controller" can function as a UART o
 | 9403h | UART / SDLC - Channel A (data)    |
 
 [Datasheet 1 - ChipDB](http://datasheets.chipdb.org/AMD/07513.pdf)
+
 [Datasheet 2 - Rockby](https://www.rockby.com.au/DSheets/26719.pdf)
 
 ## I2C
@@ -165,11 +166,14 @@ The PCF8584 is a simple I2C controller supporting 100 KHz SCL frequency in eithe
 ## Expansion
 
 Header 1 - A7:0, ~CODE_RD, ~CODE_CS, ~RST, 5V, GND
+
 Header 2 - A15:8, ~WR, ~RD, 5V, GND
+
 Header 3 - 8051 UART RX/TX, ~INT0, ~INT1, T0, T1, UART_IEO, CLK, 5V, GND
+
 Header 4 - LCD Connector (D7:0, LCD_CONTRAST, LCD_E, ~WR, A0, 5V, GND)
 
-TODO: talk about ROM expansion
+TODO: talk about ROM expansion (external devices pulling ~CODE_CS high)
 
 ## LCD
 
