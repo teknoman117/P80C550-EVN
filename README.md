@@ -25,6 +25,10 @@ Revision 1.0
     - MAX693 RST signal (active-high) is open collector. This was not mentioned in the chip's datasheet, therefore no pull-up was designed into the board. [#1](https://github.com/teknoman117/P80C550-EVN/issues/1)
     - MAX693 ~RST signal (active-low, wired-OR) does not propagate to RST (active-high). Pushing the reset button will reset only the peripherals and not the CPU. [#2](https://github.com/teknoman117/P80C550-EVN/issues/2)
 
+Revision 1.01
+  - Disconnects the non-inverted RST signal from the MAX693
+  - Add BSS84 P-Channel MOSFET to invert the ~RST signal. The P80C550 has an internal 50k to 300k pulldown resistor and the ~RST signal is current limited, so no additional components are required other than the MOSFET.
+
 The Hardware
 ============
 
