@@ -1,4 +1,4 @@
-P80C550-EVN (Rev 1.0)
+P80C550-EVN (Rev 1.01)
 ====================
 
 The P80C550-EVN is a small 8051 single board computer designed around the notion of sourcing the major components from the random collection of electronics I've accumulated over the years. It started as a breadboard computer I built after being inspired to resume my electronics hobby after watching Ben Eater's YouTube series. After carting the breadboard computer around enough for the wires to start randomly loosening, I figured I might as well make a proper PCB for the project.
