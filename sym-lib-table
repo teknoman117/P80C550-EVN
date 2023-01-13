@@ -1,7 +1,7 @@
 (sym_lib_table
-  (lib (name MCU_8051)(type Legacy)(uri ${KIPRJMOD}/MCU_8051.lib)(options "")(descr ""))
-  (lib (name 74AHCxx)(type Legacy)(uri ${KIPRJMOD}/74AHCxx.lib)(options "")(descr ""))
-  (lib (name LegacyParts)(type Legacy)(uri ${KIPRJMOD}/LegacyParts.lib)(options "")(descr ""))
-  (lib (name Mosfets)(type Legacy)(uri ${KIPRJMOD}/Mosfets.lib)(options "")(descr ""))
-  (lib (name Regulators)(type Legacy)(uri ${KIPRJMOD}/Regulators.lib)(options "")(descr ""))
+  (lib (name "MCU_8051")(type "Legacy")(uri "${KIPRJMOD}/MCU_8051.lib")(options "")(descr ""))
+  (lib (name "74AHCxx")(type "Legacy")(uri "${KIPRJMOD}/74AHCxx.lib")(options "")(descr ""))
+  (lib (name "LegacyParts")(type "Legacy")(uri "${KIPRJMOD}/LegacyParts.lib")(options "")(descr ""))
+  (lib (name "Mosfets")(type "Legacy")(uri "${KIPRJMOD}/Mosfets.lib")(options "")(descr ""))
+  (lib (name "Regulators")(type "Legacy")(uri "${KIPRJMOD}/Regulators.lib")(options "")(descr ""))
 )
